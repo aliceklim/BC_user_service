@@ -22,9 +22,12 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUser(@RequestHeader("x-user-id")Long currentUserId ,@PathVariable long userId) {
-        return userService.getUser(currentUserId, userId);
+    public UserDto getUser(@RequestHeader("x-user-id")Long currentUserId, @PathVariable long userId) {
+        UserDto userDto = userService.getUser(currentUserId, userId);
+
+        return userDto;
     }
+
 
     @PostMapping
     public List<UserDto> getUsersByIds(@RequestBody List<Long> ids) {
