@@ -34,7 +34,7 @@ spring:
            name: mentorship_channel
 
 server:
-  port: 8080
+  port: 8088
 
 logging:
   level:
@@ -47,6 +47,7 @@ project-service:
 payment-service:
   host: localhost
   port: 9080
+
 
 aws:
   accessKey: access_key

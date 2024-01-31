@@ -3,7 +3,6 @@ package school.faang.user_service.dto;
 import lombok.Builder;
 import school.faang.user_service.dto.goal.GoalDto;
 import school.faang.user_service.dto.skill.SkillDto;
-import school.faang.user_service.entity.contact.PreferredContact;
 
 import java.util.List;
 
@@ -16,8 +15,8 @@ public record UserDto(Long id,
                       boolean active,
                       String city,
                       Integer experience,
-                      List<Long> followers,
-                      List<Long> followees,
+                      List<Long> followerIds,
+                      List<Long> followeeIds,
                       List<Long> mentors,
                       List<Long> mentees,
                       CountryDto country,
