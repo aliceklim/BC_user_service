@@ -56,6 +56,7 @@ dependencies {
 	implementation("org.mapstruct:mapstruct:1.5.3.Final")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+	implementation ("com.google.code.gson:gson:2.8.8")
 	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.0")
 
 	/**
@@ -79,6 +80,11 @@ dependencies {
 	implementation("io.minio:minio:8.5.4")
 	implementation("commons-fileupload:commons-fileupload:1.5")
 
+	 * Google Calendar API
+	 */
+	implementation("com.google.api-client:google-api-client:2.0.0")
+	implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
+	implementation("com.google.apis:google-api-services-calendar:v3-rev20220715-2.0.0")
 }
 
 jsonSchema2Pojo {
@@ -113,4 +119,44 @@ tasks.jacocoTestReport {
 		csv.required.set(false)
 		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
 	}
+    classDirectories.setFrom(files(classDirectories.files.map {
+        fileTree(it).apply {
+            exclude("school/faang/user_service/entity/**",
+                "school/faang/user_service/dto/**",
+                "school/faang/user_service/commonMessages/**",
+                "school/faang/user_service/config/**",
+                "school/faang/user_service/filter/**",
+                "school/faang/user_service/exception/**",
+                "school/faang/user_service/client/**",
+                "school/faang/user_service/model/**",
+                "school/faang/user_service/repository/**",
+                "school/faang/user_service/util/**",
+                "school/faang/user_service/UserServiceApplication.class",
+                "com/json/student/**",)
+        }
+    }))
 }
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = "CLASS"
+            excludes = listOf("school.faang.projectservice.entity.**",
+                "school.faang.user_service.dto.**",
+                "school.faang.user_service.commonMessages.**",
+                "school.faang.user_service.config.**",
+                "school.faang.user_service.filter.**",
+                "school.faang.user_service.exception.**",
+                "school.faang.user_service.model.**",
+                "school.faang.user_service.client.**",
+                "school.faang.school.user_service.repository.**",
+                "school.faang.school.user_service.util.**",
+                "school.faang.user_service.UserServiceApplication",
+                "com.json.student.**")
+            limit {
+                minimum = "0.8".toBigDecimal()
+            }
+        }
+    }
+}
+
