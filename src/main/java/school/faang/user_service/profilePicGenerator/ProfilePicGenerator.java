@@ -25,7 +25,6 @@ public class ProfilePicGenerator {
     private String picType;
     private final MinIOService minIOService;
 
-
     public String generateProfilePic(User user){
         String bucketName = bucket;
         String seed = user.getUsername().toUpperCase();
