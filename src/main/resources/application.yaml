@@ -48,6 +48,13 @@ payment-service:
   host: localhost
   port: 9080
 
+minio:
+  endpoint: http://localhost:9000
+  user: user
+  password: password
+  bucketName: corpbucket
+  picGeneratorUrl: https://api.dicebear.com/6.x/initials/svg?seed=
+  picType: &radius=20&backgroundType=gradientLinear
 
 aws:
   accessKey: access_key
@@ -58,3 +65,7 @@ services:
   s3:
     bucket-name: user_bucket
     isMocked: true
+    endpoint: <http://localhost:9000>
+    accessKey: user
+    secretKey: password
+    bucketName: projectbucket
