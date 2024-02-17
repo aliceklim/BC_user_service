@@ -1,19 +1,22 @@
-ALTER TABLE users ADD COLUMN google_token_id BIGINT;
-
-CREATE TABLE google_token (
-  id SERIAL                       PRIMARY KEY,
-  uuid                            VARCHAR(255),
-  user_id                         BIGINT,
-  oauth_client_id                 VARCHAR(255),
-  oauth_client_secret             VARCHAR(255),
-  access_token                    VARCHAR(255),
-  refresh_token                   VARCHAR(255),
-  expiration_time_milliseconds    BIGINT,
-  updated_at                      TIMESTAMP,
-  CONSTRAINT fk_user_token_id FOREIGN KEY (user_id) REFERENCES users (id)
+CREATE TABLE google_credentials (
+    id                          bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY UNIQUE,
+    client_id                   varchar(128) UNIQUE NOT NULL,
+    client_email                varchar(128) UNIQUE NOT NULL,
+    project_id                  varchar(32) UNIQUE NOT NULL,
+    auth_uri                    varchar(64) UNIQUE NOT NULL,
+    token_uri                   varchar(64) UNIQUE NOT NULL,
+    auth_provider_x509_cert_url varchar(64) UNIQUE NOT NULL,
+    client_secret               varchar(64) UNIQUE NOT NULL,
+    redirect_uri                varchar(64) UNIQUE NOT NULL,
+    javascript_origin           varchar(64) UNIQUE NOT NULL
 );
 
-INSERT INTO event (title, description, start_date, end_date, location, max_attendees, user_id, type, status)
-VALUES ('Title', 'description', '2023-08-07 09:00:00', '2023-08-07 10:00:00', 'Location', 5, 1, 1, 1);
+INSERT INTO google_credentials (client_id, client_email, project_id, auth_uri, token_uri,
+auth_provider_x509_cert_url, client_secret, redirect_uri, javascript_origin)
+VALUES
+    ('1074499156848-r70ij83ah45s2n2sj1a7n60h61ni7rob.apps.googleusercontent.com',
+    'serhii.rubets@gmail.com', 'corporationx', 'https://accounts.google.com/o/oauth2/auth',
+    'https://oauth2.googleapis.com/token', 'https://www.googleapis.com/oauth2/v1/certs',
+    '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', 'http://localhost:8888/Callback', 'http://localhost:8080');
 
 

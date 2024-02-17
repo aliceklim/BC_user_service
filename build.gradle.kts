@@ -80,6 +80,7 @@ dependencies {
 	implementation("io.minio:minio:8.5.4")
 	implementation("commons-fileupload:commons-fileupload:1.5")
 
+	/**
 	 * Google Calendar API
 	 */
 	implementation("com.google.api-client:google-api-client:2.0.0")
