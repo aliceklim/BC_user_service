@@ -18,8 +18,6 @@ public interface MapperUserDto {
     @Mapping(target = "mentees", expression = "java(user.getMentees().stream().map(men -> men.getId()).toList())")
     UserDto toDto(User user);
 
-    @Mapping(target = "followers", expression = "java(userDto.followerIds().stream().map(folId -> User.builder().id(folId).build()).toList())")
-    @Mapping(target = "followees", expression = "java(userDto.followeeIds().stream().map(folId -> User.builder().id(folId).build()).toList())")
     @Mapping(target = "followers", source = "followerIds", qualifiedByName = "mapToUserList")
     @Mapping(target = "followees", source = "followeeIds", qualifiedByName = "mapToUserList")
     @Mapping(target = "mentors", expression = "java(userDto.mentors().stream().map(menId -> User.builder().id(menId).build()).toList())")

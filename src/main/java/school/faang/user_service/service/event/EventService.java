@@ -32,7 +32,12 @@ public class EventService {
             throw new DataValidationException("The event " + event.getId() +
                     " cannot be held with such skills at the user " + user.getId() + " in the method create");
         }
-        return eventMapper.toEventDto(eventRepository.save(eventMapper.toEvent(event)));
+        Event newEvent = eventMapper.toEvent(event);
+
+        Event savedEvent = eventRepository.save(newEvent);
+
+
+        return eventMapper.toEventDto(savedEvent);
     }
 
     public EventDto getEvent(long eventId) {

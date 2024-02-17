@@ -1,6 +1,11 @@
 package school.faang.user_service.controller.event;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import school.faang.user_service.dto.event.EventDto;
 import school.faang.user_service.dto.event.EventFilterDto;
@@ -12,10 +17,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/events")
+@Slf4j
 public class EventController {
     private final EventService eventService;
 
-    public EventDto create(EventDto event) {
+    @Operation(summary = "Add event")
+    @PostMapping
+    public EventDto create(@RequestBody EventDto event) {
         if (checkValidation(event)) {
             throw new DataValidationException("Object is not valid");
         }
@@ -55,7 +64,7 @@ public class EventController {
 
     private boolean checkValidation(EventDto event) {
         return event.getTitle() == null && event.getTitle().isEmpty()
-                && event.getStartDate() == null && event.getOwnerId() == null;
+                && event.getStartDate() == null && event.getUserId() == null;
     }
 
     private void validateId(Long id) {

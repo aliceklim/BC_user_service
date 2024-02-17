@@ -14,7 +14,7 @@ import com.google.api.services.calendar.CalendarScopes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import school.faang.user_service.service.GoogleCalendarService;
+import school.faang.user_service.google_calendar.GoogleCalendarService;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
