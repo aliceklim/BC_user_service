@@ -13,8 +13,6 @@ import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import school.faang.user_service.client.MinIOClient;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,8 +23,9 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 public class MinIOService {
 
+    private final MinioClient minioClient;
+
     public void uploadToMinioBucket(MultipartFile file, String bucketName){
-        MinioClient minioClient = MinIOClient.getClient();
         try {
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(bucketName)
@@ -43,7 +42,6 @@ public class MinIOService {
     }
 
     public URL getUrl(MultipartFile profilePicFile, String bucketName){
-        MinioClient minioClient = MinIOClient.getClient();
         String urlString = null;
         try {
             urlString = minioClient.getPresignedObjectUrl(

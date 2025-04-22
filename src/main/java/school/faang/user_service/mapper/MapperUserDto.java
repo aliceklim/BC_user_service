@@ -1,9 +1,9 @@
 package school.faang.user_service.mapper;
 
 import org.mapstruct.*;
-import school.faang.user_service.dto.UserDto;import school.faang.user_service.entity.User;
-import school.faang.user_service.mapper.GoalMapper;
-import school.faang.user_service.mapper.SkillMapper;
+import school.faang.user_service.dto.user.CreatedUserDto;
+import school.faang.user_service.dto.user.CreateUserRequestDto;
+import school.faang.user_service.dto.user.UserDto;import school.faang.user_service.entity.User;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +26,31 @@ public interface MapperUserDto {
 
     List<UserDto> toDto(List<User> userList);
     List<User> toEntity(List<UserDto> userDtoList);
+
+    @Mapping(source = "username", target = "username")
+    @Mapping(source = "email", target = "email")
+    CreatedUserDto toCreatedUserDto(User user);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "password", constant = "default")
+    @Mapping(target = "active", constant = "true")
+    @Mapping(target = "followers", ignore = true)
+    @Mapping(target = "followees", ignore = true)
+    @Mapping(target = "ownedEvents", ignore = true)
+    @Mapping(target = "mentees", ignore = true)
+    @Mapping(target = "mentors", ignore = true)
+    @Mapping(target = "receivedMentorshipRequests", ignore = true)
+    @Mapping(target = "sentMentorshipRequests", ignore = true)
+    @Mapping(target = "sentGoalInvitations", ignore = true)
+    @Mapping(target = "receivedGoalInvitations", ignore = true)
+    @Mapping(target = "participatedEvents", ignore = true)
+    @Mapping(target = "recommendationsGiven", ignore = true)
+    @Mapping(target = "recommendationsReceived", ignore = true)
+    @Mapping(target = "contacts", ignore = true)
+    @Mapping(target = "ratings", ignore = true)
+    @Mapping(target = "contactPreference", ignore = true)
+    @Mapping(target = "premium", ignore = true)
+    User fromCreateRequest(CreateUserRequestDto dto);
 
     @Named("mapToIdList")
     default List<Long> mapToIdList(List<User> users) {

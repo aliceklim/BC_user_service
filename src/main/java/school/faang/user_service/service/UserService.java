@@ -5,20 +5,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import school.faang.user_service.config.context.UserContext;
+import school.faang.user_service.dto.user.CreateUserRequestDto;
+import school.faang.user_service.dto.user.CreatedUserDto;
 import school.faang.user_service.entity.contact.PreferredContact;
 import school.faang.user_service.mapper.MapperUserDto;
 import school.faang.user_service.messaging.MessagePublisher;
-import school.faang.user_service.messaging.ProfileViewEventPublisher;
 import school.faang.user_service.messaging.events.ProfileViewEvent;
-import school.faang.user_service.dto.UserDto;
+import school.faang.user_service.dto.user.UserDto;
 import school.faang.user_service.entity.User;
 import school.faang.user_service.filter.user.UserFilterDto;
-import school.faang.user_service.mapper.UserMapper;
 import school.faang.user_service.filter.user.UserFilter;
+import school.faang.user_service.entity.UserProfilePic;
+import school.faang.user_service.profilePicGenerator.ProfilePicGenerator;
 import school.faang.user_service.repository.UserRepository;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Stream;
 
 @Service
@@ -29,6 +30,19 @@ public class UserService {
     private final MapperUserDto userMapper;
     private final MessagePublisher<ProfileViewEvent> profileViewEventMessagePublisher;
     private final UserContext userContext;
+    private final ProfilePicGenerator profilePicGenerator;
+
+    @Transactional
+    public CreatedUserDto createUser (CreateUserRequestDto request) {
+        User user = userMapper.fromCreateRequest(request);
+        UserProfilePic pic = profilePicGenerator.generateProfilePic(user);
+        user.setProfilePicUrl(pic.url());
+
+
+        userRepository.save(user);
+
+        return userMapper.toCreatedUserDto(user);
+    }
 
     @Transactional(readOnly = true)
     public List<UserDto> getPremiumUsers(UserFilterDto userFilterDto) {

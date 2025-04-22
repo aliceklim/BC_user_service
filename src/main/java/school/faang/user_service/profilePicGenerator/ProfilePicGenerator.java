@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+
+import school.faang.user_service.entity.UserProfilePic;
 import school.faang.user_service.entity.User;
 import school.faang.user_service.service.MinIOService;
 
@@ -25,21 +27,22 @@ public class ProfilePicGenerator {
     private String picType;
     private final MinIOService minIOService;
 
-    public String generateProfilePic(User user){
-        String bucketName = bucket;
+    public UserProfilePic generateProfilePic(User user){
         String seed = user.getUsername().toUpperCase();
         String profilePicName = seed + user.getId();
-        String generatedPicUrl = picGeneratorUrl + seed
-                + picType;
-        String pic = getPicFromUrl(generatedPicUrl);
+        String generatedPicUrl = picGeneratorUrl + seed + picType;
 
+        String pic = getPicFromUrl(generatedPicUrl);
         MultipartFile profilePicFile = convertToMultipartFile(pic, profilePicName);
 
-        minIOService.uploadToMinioBucket(profilePicFile, bucketName);
+        minIOService.uploadToMinioBucket(profilePicFile, bucket);
 
-        URL picUrl = minIOService.getUrl(profilePicFile, bucketName);
+        URL storedPicUrl = minIOService.getUrl(profilePicFile, bucket);
 
-        return generatedPicUrl;
+        return  UserProfilePic.builder()
+                .url(storedPicUrl)
+                .pic(generatedPicUrl)
+                .build();
     }
 
     private String getPicFromUrl(String picUrl){

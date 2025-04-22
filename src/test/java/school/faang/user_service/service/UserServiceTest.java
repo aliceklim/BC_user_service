@@ -16,7 +16,7 @@ import school.faang.user_service.mapper.MapperUserDto;
 import school.faang.user_service.mapper.SkillMapper;
 import school.faang.user_service.messaging.ProfileViewEventPublisher;
 import school.faang.user_service.messaging.events.ProfileViewEvent;
-import school.faang.user_service.dto.UserDto;
+import school.faang.user_service.dto.user.UserDto;
 import school.faang.user_service.entity.User;
 import school.faang.user_service.entity.premium.Premium;
 import school.faang.user_service.filter.user.ActiveUserFilter;
