@@ -38,7 +38,6 @@ public class UserService {
         UserProfilePic pic = profilePicGenerator.generateProfilePic(user);
         user.setProfilePicUrl(pic.url());
 
-
         userRepository.save(user);
 
         return userMapper.toCreatedUserDto(user);

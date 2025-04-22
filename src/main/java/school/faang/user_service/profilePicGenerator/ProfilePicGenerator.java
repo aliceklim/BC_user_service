@@ -28,7 +28,7 @@ public class ProfilePicGenerator {
     private final MinIOService minIOService;
 
     public UserProfilePic generateProfilePic(User user){
-        String seed = user.getUsername().toUpperCase();
+        String seed = user.getName().toUpperCase();
         String profilePicName = seed + user.getId();
         String generatedPicUrl = picGeneratorUrl + seed + picType;
 

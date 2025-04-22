@@ -10,6 +10,8 @@ import java.util.List;
 
 @Builder
 public record CreateUserRequestDto(@NotBlank String username,
+                                   @NotBlank String name,
+                                   @NotBlank String surname,
                                    @Email @NotBlank String email,
                                    @Pattern(regexp = "^[+]{1}(?:[0-9\\-()\\/\\.\\s]?){6,15}[0-9]{1}$") String phone,
                                    @Size(max = 500) String aboutMe,

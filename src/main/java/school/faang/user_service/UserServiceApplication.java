@@ -9,9 +9,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import school.faang.user_service.entity.User;
 import school.faang.user_service.profilePicGenerator.ProfilePicGenerator;
-
+@EnableJpaAuditing
 @SpringBootApplication
 @EnableFeignClients("school.faang.user_service.client")
 @OpenAPIDefinition(
