@@ -7,6 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import school.faang.user_service.entity.contact.Contact;
 import school.faang.user_service.entity.contact.ContactPreference;
 import school.faang.user_service.entity.event.Event;
@@ -19,6 +23,7 @@ import school.faang.user_service.entity.recommendation.Recommendation;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -35,6 +40,12 @@ public class User {
 
     @Column(name = "username", length = 64, nullable = false, unique = true)
     private String username;
+
+    @Column(name = "name", length = 64, nullable = false, unique = true)
+    private String name;
+
+    @Column(name = "surname", length = 64, nullable = false, unique = true)
+    private String surname;
 
     @Column(name = "email", length = 64, nullable = false, unique = true)
     private String email;
@@ -60,16 +71,6 @@ public class User {
 
     @Column(name = "experience")
     private Integer experience;
-
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Builder.Default
     @ManyToMany
@@ -157,4 +158,26 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private Premium premium;
+
+    @CreatedBy
+    @Column(name = "created_by", updatable = false)
+    private String createdBy;
+
+    @LastModifiedBy
+    @Column(name = "updated_by")
+    private String updatedBy;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 }

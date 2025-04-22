@@ -27,8 +27,11 @@ public interface MapperUserDto {
     List<UserDto> toDto(List<User> userList);
     List<User> toEntity(List<UserDto> userDtoList);
 
-    @Mapping(source = "username", target = "username")
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "surname", target = "surname")
     @Mapping(source = "email", target = "email")
+    @Mapping(source = "profilePicUrl", target = "profilePic")
+    @Mapping(source = "id", target = "id")
     CreatedUserDto toCreatedUserDto(User user);
 
     @Mapping(target = "id", ignore = true)
