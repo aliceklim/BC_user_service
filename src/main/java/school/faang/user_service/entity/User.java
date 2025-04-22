@@ -16,6 +16,7 @@ import school.faang.user_service.entity.event.Rating;
 import school.faang.user_service.entity.premium.Premium;
 import school.faang.user_service.entity.recommendation.Recommendation;
 
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,12 +149,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Rating> ratings = new ArrayList<>();
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "fileId", column = @Column(name = "profile_pic_file_id")),
-            @AttributeOverride(name = "smallFileId", column = @Column(name = "profile_pic_small_file_id"))
-    })
-    private UserProfilePic userProfilePic;
+    @Column(name = "pic_url")
+    private URL profilePicUrl;
 
     @OneToOne(mappedBy = "user")
     private ContactPreference contactPreference;

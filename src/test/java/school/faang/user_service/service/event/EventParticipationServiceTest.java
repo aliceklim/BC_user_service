@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import school.faang.user_service.commonMessages.ErrorMessagesForEvent;
-import school.faang.user_service.dto.UserDto;
+import school.faang.user_service.dto.user.UserDto;
 import school.faang.user_service.entity.User;
 import school.faang.user_service.exception.RegistrationUserForEventException;
 import school.faang.user_service.mapper.GoalMapper;

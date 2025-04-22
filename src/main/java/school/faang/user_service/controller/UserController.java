@@ -1,9 +1,11 @@
 package school.faang.user_service.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import school.faang.user_service.config.context.UserContext;
-import school.faang.user_service.dto.UserDto;
+import school.faang.user_service.dto.user.CreateUserRequestDto;
+import school.faang.user_service.dto.user.CreatedUserDto;
+import school.faang.user_service.dto.user.UserDto;
 import school.faang.user_service.filter.user.UserFilterDto;
 import school.faang.user_service.service.UserService;
 
@@ -23,13 +25,15 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public UserDto getUser(@RequestHeader("x-user-id")Long currentUserId, @PathVariable long userId) {
-        UserDto userDto = userService.getUser(currentUserId, userId);
-
-        return userDto;
+        return userService.getUser(currentUserId, userId);
     }
 
+    @PostMapping("/new")
+    public CreatedUserDto createUser(@RequestBody @Valid CreateUserRequestDto request){
+        return userService.createUser(request);
+    }
 
-    @PostMapping
+    @GetMapping
     public List<UserDto> getUsersByIds(@RequestBody List<Long> ids) {
         return userService.getUsersByIds(ids);
     }
