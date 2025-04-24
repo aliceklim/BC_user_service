@@ -15,6 +15,7 @@ import school.faang.user_service.filter.goal.dto.GoalFilterDto;
 import school.faang.user_service.service.goal.GoalService;
 import school.faang.user_service.util.Message;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,36 +24,32 @@ public class GoalController {
     private final GoalService goalService;
 
     @PostMapping
-    public GoalDto createGoal(@RequestBody GoalDto goalDto, Long userId){
+    public GoalDto createGoal(@RequestBody GoalDto goalDto, UUID userId){
         return goalService.createGoal(goalDto, userId);
     }
 
     @PutMapping
-    public GoalDto updateGoal(@RequestBody GoalDto goalDto, Long userId){
+    public GoalDto updateGoal(@RequestBody GoalDto goalDto, UUID userId){
         return goalService.updateGoal(goalDto, userId);
     }
 
     @DeleteMapping("/{goalId}")
-    public void deleteGoal(@PathVariable Long goalId){
-        if (goalId < 0){
-            throw new DataValidationException(Message.GOAL_NOT_FOUND);
-        }
-
+    public void deleteGoal(@PathVariable UUID goalId){
         goalService.deleteGoal(goalId);
     }
 
     @GetMapping("/{userId}")
-    public List<GoalDto> getGoalsByUser(Long userId, GoalFilterDto goalFilterDto){
+    public List<GoalDto> getGoalsByUser(UUID userId, GoalFilterDto goalFilterDto){
         return goalService.getGoalsByUser(userId, goalFilterDto);
     }
 
     @GetMapping("/{parentGoalId}/subtasks")
-    public List<GoalDto> findSubtasksByGoalId(Long parentGoalId, GoalFilterDto goalFilterDto){
+    public List<GoalDto> findSubtasksByGoalId(UUID parentGoalId, GoalFilterDto goalFilterDto){
         return goalService.findSubtasksByGoalId(parentGoalId, goalFilterDto);
     }
 
     @PutMapping("/{goalId}/complete")
-    public GoalDto completeGoal(@PathVariable Long goalId){
+    public GoalDto completeGoal(@PathVariable UUID goalId){
         return goalService.completeGoal(goalId);
     }
 }

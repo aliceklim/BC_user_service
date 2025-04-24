@@ -1,6 +1,7 @@
 package school.faang.user_service.service;
 
 import lombok.RequiredArgsConstructor;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import school.faang.user_service.entity.MentorshipRequest;
@@ -30,7 +31,7 @@ public class MentorshipService {
     private final MentorshipEventPublisher mentorshipEventPublisher;
 
     @Transactional
-    public void approveMentorshipRequest(Long requesterId, Long receiverId){
+    public void approveMentorshipRequest(UUID requesterId, UUID receiverId){
         Optional<MentorshipRequest> mentorshipRequest = mentorshipRequestRepository.findLatestRequest(requesterId, receiverId);
         if (mentorshipRequest.isEmpty()){
             throw new RequestNotFoundException(requesterId, receiverId);
@@ -42,7 +43,7 @@ public class MentorshipService {
         mentorshipEventPublisher.publish(event);
     }
 
-    public List<UserDto> getMentees(Long userId) {
+    public List<UserDto> getMentees(UUID userId) {
         Optional<User> mentorId = mentorshipRepository.findById(userId);
         if (mentorId.isEmpty()) {
             throw new DataValidationException("Invalid mentee ID" + userId);
@@ -50,7 +51,7 @@ public class MentorshipService {
         return mapperUserDto.toDto(mentorId.get().getMentees());
     }
 
-    public List<UserDto> getMentors(Long userId) {
+    public List<UserDto> getMentors(UUID userId) {
         Optional<User> menteeId = mentorshipRepository.findById(userId);
         if (menteeId.isEmpty()) {
             throw new DataValidationException("Invalid mentor ID" + userId);
@@ -59,7 +60,7 @@ public class MentorshipService {
     }
 
     @Transactional
-    public void deleteMentee(Long menteeId, Long mentorId) {
+    public void deleteMentee(UUID menteeId, UUID mentorId) {
         User mentee = findUserValidation(menteeId);
         User mentor = findUserValidation(mentorId);
 
@@ -72,7 +73,7 @@ public class MentorshipService {
     }
 
     @Transactional
-    public void deleteMentor(Long menteeId, Long mentorId) {
+    public void deleteMentor(UUID menteeId, UUID mentorId) {
         User mentee = findUserValidation(menteeId);
         User mentor = findUserValidation(mentorId);
 
@@ -84,7 +85,7 @@ public class MentorshipService {
         userRepository.save(mentee);
     }
 
-    private User findUserValidation(Long id) {
+    private User findUserValidation(UUID id) {
         if (id == null) {
             throw new DataValidationException("Invalid ID");
         }

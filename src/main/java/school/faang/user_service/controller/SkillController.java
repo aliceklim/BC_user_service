@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import java.util.UUID;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,25 +30,24 @@ public class SkillController {
     @PostMapping
     public SkillDto create(@RequestParam @NotEmpty(message = "Title can't be empty")
                                @Size(max = 100, message = "Title should be at least 3 symbols short") String title) {
-        SkillDto skill = new SkillDto(0L, title);
-
+        SkillDto skill = SkillDto.builder().title(title).build();
         return skillService.create(skill);
     }
 
     @GetMapping("/{userId}")
-    public List<SkillDto> getUserSkills(@PathVariable Long userId,
+    public List<SkillDto> getUserSkills(@PathVariable UUID userId,
                                         @RequestParam("page number") int pageNumber,
                                         @RequestParam("element number") int pageSize) {
         return skillService.getUserSkills(userId, pageNumber, pageSize);
     }
 
     @GetMapping("/{userId}/offered")
-    public List<SkillCandidateDto> getOfferedSkills(@PathVariable Long userId){
+    public List<SkillCandidateDto> getOfferedSkills(@PathVariable UUID userId){
         return skillService.getOfferedSkills(userId);
     }
 
     @PutMapping
-    public SkillDto acquireSkillFromOffers(Long skillId, Long userId){
+    public SkillDto acquireSkillFromOffers(UUID skillId, UUID userId){
         return skillService.acquireSkillFromOffers(skillId, userId);
     }
 }

@@ -2,11 +2,13 @@ package school.faang.user_service.dto.skill;
 
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class UserSkillGuaranteeDto {
 
-    private Long id;
-    private Long userId;
-    private Long skillId;
-    private Long guarantorId;
+    private UUID id;
+    private UUID userId;
+    private UUID skillId;
+    private UUID guarantorId;
 }

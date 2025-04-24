@@ -3,11 +3,12 @@ package school.faang.user_service.exception;
 import lombok.AllArgsConstructor;
 
 import java.text.MessageFormat;
+import java.util.UUID;
 
 @AllArgsConstructor
 public class RequestNotFoundException extends RuntimeException {
-    private Long requesterId;
-    private Long receiverId;
+    private UUID requesterId;
+    private UUID receiverId;
 
     @Override
     public String getMessage() {

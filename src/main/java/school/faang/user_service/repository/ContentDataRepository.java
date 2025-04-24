@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import school.faang.user_service.entity.ContentData;
 
+import java.util.UUID;
+
 @Repository
-public interface ContentDataRepository extends JpaRepository<ContentData, Long> {
+public interface ContentDataRepository extends JpaRepository<ContentData, UUID> {
 }

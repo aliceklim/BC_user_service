@@ -1,5 +1,6 @@
 package school.faang.user_service.repository;
 
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query(nativeQuery = true, value = """
             SELECT COUNT(s.id) FROM users u
@@ -17,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             JOIN skill s ON us.skill_id = s.id
             WHERE u.id = ?1 AND s.id IN (?2)
             """)
-    int countOwnedSkills(long userId, List<Long> ids);
+    int countOwnedSkills(UUID userId, List<Long> ids);
 
     @Query(nativeQuery = true, value = """
             SELECT u.* FROM users u

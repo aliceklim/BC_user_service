@@ -12,6 +12,7 @@ import school.faang.user_service.filter.user.UserFilter;
 import school.faang.user_service.repository.SubscriptionRepository;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
@@ -21,32 +22,32 @@ public class SubscriptionService {
     private final List<UserFilter> userFilters;
     private final UserMapper userMapper;
 
-    public void followUser(long followerId, long followeeId) {
+    public void followUser(UUID followerId, UUID followeeId) {
         validateFollower(followerId, followeeId);
         subscriptionRepository.followUser(followerId, followeeId);
     }
 
-    public void unfollowUser(long followerId, long followeeId) {
+    public void unfollowUser(UUID followerId, UUID followeeId) {
         validateFollower(followerId, followeeId);
         subscriptionRepository.unfollowUser(followerId, followeeId);
     }
 
-    public List<UserDto> getFollowers(long followeeId, UserFilterDto filter) {
+    public List<UserDto> getFollowers(UUID followeeId, UserFilterDto filter) {
         validateUserId(followeeId);
         return applyFilter(subscriptionRepository.findByFolloweeId(followeeId), filter);
     }
 
-    public int getFollowersCount(long followeeId) {
+    public int getFollowersCount(UUID followeeId) {
         validateUserId(followeeId);
         return subscriptionRepository.findFollowersAmountByFolloweeId(followeeId);
     }
 
-    public List<UserDto> getFollowing(long followeeId, UserFilterDto filter) {
+    public List<UserDto> getFollowing(UUID followeeId, UserFilterDto filter) {
         validateUserId(followeeId);
         return applyFilter(subscriptionRepository.findByFolloweeId(followeeId), filter);
     }
 
-    public int getFollowingCount(long followerId) {
+    public int getFollowingCount(UUID followerId) {
         validateUserId(followerId);
         return subscriptionRepository.findFolloweesAmountByFollowerId(followerId);
     }
@@ -61,7 +62,7 @@ public class SubscriptionService {
         return users.map(userMapper::toDto).toList();
     }
 
-    private void validateFollower(long followerId, long followeeId) {
+    private void validateFollower(UUID followerId, UUID followeeId) {
         validateUserId(followerId);
         validateUserId(followeeId);
         if (followerId == followeeId) {
@@ -69,9 +70,9 @@ public class SubscriptionService {
         }
     }
 
-    private void validateUserId(long userId) {
-        if (userId <= 0) {
-            throw new IllegalArgumentException(ErrorMessages.NEGATIVE_ID);
+    private void validateUserId(UUID userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException(ErrorMessages.USER_IS_NULL);
         }
     }
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RecommendationEventDto {
     @NotNull
-    private Long authorId;
+    private UUID authorId;
     @NotNull
-    private Long receiverId;
+    private UUID receiverId;
 }

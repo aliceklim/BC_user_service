@@ -10,6 +10,7 @@ import school.faang.user_service.dto.user.UserDto;
 import school.faang.user_service.service.event.EventParticipationService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/event")
@@ -19,22 +20,22 @@ public class EventParticipationController {
     private final EventParticipationService eventParticipationService;
 
     @PostMapping("/{eventId}/register/{userId}")
-    public void registerParticipant(@PathVariable Long eventId, @PathVariable Long userId) {
+    public void registerParticipant(@PathVariable UUID eventId, @PathVariable UUID userId) {
         eventParticipationService.registerParticipant(eventId, userId);
     }
 
     @PostMapping("/{eventId}/unregister/{userId}")
-    public void unregisterParticipant(@PathVariable Long eventId, @PathVariable Long userId) {
+    public void unregisterParticipant(@PathVariable UUID eventId, @PathVariable UUID userId) {
         eventParticipationService.unregisterParticipant(eventId, userId);
     }
 
     @GetMapping("/{eventId}/participants")
-    public List<UserDto> getParticipant(@PathVariable Long eventID) {
+    public List<UserDto> getParticipant(@PathVariable UUID eventID) {
         return eventParticipationService.getParticipant(eventID);
     }
 
     @GetMapping("/{eventId}/participants/count")
-    public long getParticipantsCount(@PathVariable Long eventId) {
+    public long getParticipantsCount(@PathVariable UUID eventId) {
         return eventParticipationService.getParticipantsCount(eventId);
     }
 }

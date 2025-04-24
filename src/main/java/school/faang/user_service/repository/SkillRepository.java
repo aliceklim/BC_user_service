@@ -1,5 +1,6 @@
 package school.faang.user_service.repository;
 
+import java.util.UUID;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -10,19 +11,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SkillRepository extends CrudRepository<Skill, Long> {
+public interface SkillRepository extends CrudRepository<Skill, UUID> {
 
     boolean existsByTitle(String title);
 
     @Query(nativeQuery = true, value = "SELECT COUNT(id) FROM skill WHERE id IN (?1)")
-    int countExisting(List<Long> ids);
+    int countExisting(List<UUID> ids);
 
     @Query(nativeQuery = true, value = """
             SELECT s.* FROM skill s
             JOIN user_skill us ON us.skill_id = s.id
             WHERE us.user_id = ?1
             """)
-    List<Skill> findAllByUserId(long userId);
+    List<Skill> findAllByUserId(UUID userId);
 
     @Query(nativeQuery = true, value = """
             SELECT s.* FROM skill s
@@ -30,24 +31,24 @@ public interface SkillRepository extends CrudRepository<Skill, Long> {
             JOIN recommendation r ON r.id = so.recommendation_id
             WHERE r.receiver_id = :userId
             """)
-    List<Skill> findSkillsOfferedToUser(long userId);
+    List<Skill> findSkillsOfferedToUser(UUID userId);
 
     @Query(nativeQuery = true, value = """
             SELECT s.* FROM skill s
             JOIN user_skill us ON us.skill_id = :skillId AND us.user_id = :userId
             """)
-    Optional<Skill> findUserSkill(long skillId, long userId);
+    Optional<Skill> findUserSkill(UUID skillId, UUID userId);
 
     Optional<Skill> findByTitle(String title);
 
     @Query(nativeQuery = true, value = "INSERT INTO user_skill (skill_id, user_id) VALUES (:skillId, :userId)")
     @Modifying
-    void assignSkillToUser(long skillId, long userId);
+    void assignSkillToUser(UUID skillId, UUID userId);
 
     @Query(nativeQuery = true, value = """
             SELECT s.* FROM skill s
             WHERE s.id IN (SELECT gs.skill_id FROM goal_skill gs
             WHERE gs.goal_id = ?1)
             """)
-    List<Skill> findSkillsByGoalId(long goalId);
+    List<Skill> findSkillsByGoalId(UUID goalId);
 }

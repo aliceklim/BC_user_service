@@ -1,4 +1,4 @@
-package school.faang.user_service.profilePicGenerator;
+package school.faang.user_service.profile_pic_generator;
 
 import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;

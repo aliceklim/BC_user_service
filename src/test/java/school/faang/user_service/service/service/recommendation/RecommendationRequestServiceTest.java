@@ -24,6 +24,7 @@ import school.faang.user_service.service.recommendation.RecommendationRequestSer
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -41,55 +42,65 @@ class RecommendationRequestServiceTest {
     @Mock
     private RecommendationRequestMapperImpl recommendationRequestMapper;
     private RecommendationRequestDto requestDto;
+    private UUID requestId;
+    private List<UUID> skillIds;
+    private UUID requesterId;
+    private UUID receiverId;
+    private UUID nonExistingId;
 
     @BeforeEach
     void setUp() {
+        requestId = UUID.randomUUID();
+        requesterId = UUID.randomUUID();
+        receiverId = UUID.randomUUID();
+        skillIds = List.of(UUID.randomUUID());
+
         requestDto = RecommendationRequestDto.builder()
-                .id(1L)
+                .id(requestId)
                 .message("Hello")
                 .status(RequestStatus.ACCEPTED)
-                .skillIds(List.of(1L))
-                .requesterId(1L)
-                .receiverId(2L)
+                .skillIds(skillIds)
+                .requesterId(requesterId)
+                .receiverId(receiverId)
                 .createdAt(LocalDateTime.now().minusMonths(7))
                 .build();
     }
 
     @Test
     void testThrowValidationExceptionByUserId() {
-        when(userRepository.existsById(1L)).thenReturn(false);
+        when(userRepository.existsById(nonExistingId)).thenReturn(false);
         assertThrows(DataValidationException.class, () -> recommendationRequestService.create(requestDto));
     }
 
     @Test
     void testThrowValidationExceptionBySkillId() {
-        Mockito.lenient().when(skillRepository.existsById(1L)).thenReturn(false);
+        Mockito.lenient().when(skillRepository.existsById(nonExistingId)).thenReturn(false);
         assertThrows(DataValidationException.class, () -> recommendationRequestService.create(requestDto));
     }
 
     @Test
     void testNotThrowValidationException() {
-        when(userRepository.existsById(1L)).thenReturn(true);
-        when(userRepository.existsById(2L)).thenReturn(true);
-        when(skillRepository.existsById(1L)).thenReturn(true);
+        when(userRepository.existsById(requesterId)).thenReturn(true);
+        when(userRepository.existsById(receiverId)).thenReturn(true);
+        when(skillRepository.existsById(skillIds.get(0))).thenReturn(true);
         assertDoesNotThrow(() -> recommendationRequestService.create(requestDto));
     }
 
     @Test
     void testNotThrowValidationExceptionByRequestTime() {
         requestDto.setCreatedAt(LocalDateTime.now().minusMonths(5));
-        when(userRepository.existsById(1L)).thenReturn(true);
-        when(userRepository.existsById(2L)).thenReturn(true);
-        when(skillRepository.existsById(1L)).thenReturn(true);
+        when(userRepository.existsById(requesterId)).thenReturn(true);
+        when(userRepository.existsById(receiverId)).thenReturn(true);
+        when(skillRepository.existsById(skillIds.get(0))).thenReturn(true);
         assertThrows(DataValidationException.class, () -> recommendationRequestService.create(requestDto));
     }
 
     @Test
     void testThrowValidationExceptionByRequestTime() {
         requestDto.setCreatedAt(LocalDateTime.now().minusMonths(10));
-        when(userRepository.existsById(1L)).thenReturn(true);
-        when(userRepository.existsById(2L)).thenReturn(true);
-        when(skillRepository.existsById(1L)).thenReturn(true);
+        when(userRepository.existsById(requesterId)).thenReturn(true);
+        when(userRepository.existsById(receiverId)).thenReturn(true);
+        when(skillRepository.existsById(skillIds.get(0))).thenReturn(true);
         assertDoesNotThrow(() -> recommendationRequestService.create(requestDto));
     }
 

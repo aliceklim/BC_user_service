@@ -1,6 +1,7 @@
 package school.faang.user_service.service.recommendation;
 
 import lombok.RequiredArgsConstructor;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -67,12 +68,12 @@ public class RecommendationService {
     }
 
     @Transactional
-    public void delete(long recommendationId) {
+    public void delete(UUID recommendationId) {
         recommendationRepository.deleteById(recommendationId);
     }
 
     @Transactional(readOnly = true)
-    public Page<RecommendationDto> getAllUserRecommendations(long receiverId, int pageNumber, int pageSize) {
+    public Page<RecommendationDto> getAllUserRecommendations(UUID receiverId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Recommendation> receiverRecommendations = recommendationRepository.findAllByReceiverId(receiverId, pageable);
 
@@ -80,7 +81,7 @@ public class RecommendationService {
     }
 
     @Transactional(readOnly = true)
-    public Page<RecommendationDto> getAllGivenRecommendations(long authorId, int pageNumber, int pageSize) {
+    public Page<RecommendationDto> getAllGivenRecommendations(UUID authorId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Recommendation> authorRecommendations = recommendationRepository.findAllByAuthorId(authorId, pageable);
 
@@ -88,13 +89,13 @@ public class RecommendationService {
     }
 
     private void processSkillOffers(Recommendation recommendation) {
-        long userId = recommendation.getReceiver().getId();
-        long authorId = recommendation.getAuthor().getId();
+        UUID userId = recommendation.getReceiver().getId();
+        UUID authorId = recommendation.getAuthor().getId();
         List<SkillOffer> skillOffers = recommendation.getSkillOffers();
         List<Skill> userSkills = getUserSkills(userId);
 
         for (SkillOffer skillOffer : skillOffers) {
-            long skillId = skillOffer.getSkill().getId();
+            UUID skillId = skillOffer.getSkill().getId();
 
             if (userSkills.contains(skillOffer.getSkill()) && guaranteeNotExist(userId, skillId, authorId)) {
                 saveUserSkillGuarantee(userId, skillId, authorId);
@@ -104,14 +105,14 @@ public class RecommendationService {
         }
     }
 
-    private List<Skill> getUserSkills(long userId) {
+    private List<Skill> getUserSkills(UUID userId) {
         Optional<User> user = userRepository.findById(userId);
 
         return user.map(User::getSkills)
                 .orElse(Collections.emptyList());
     }
 
-    private void saveUserSkillGuarantee(long userId, long skillId, long guarantorId) {
+    private void saveUserSkillGuarantee(UUID userId, UUID skillId, UUID guarantorId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new DataValidationException("User not found"));
         Skill skill = skillRepository.findById(skillId)
@@ -127,7 +128,7 @@ public class RecommendationService {
         userSkillGuaranteeRepository.save(guarantee);
     }
 
-    private boolean guaranteeNotExist(long userId, long skillId, long guarantorId) {
+    private boolean guaranteeNotExist(UUID userId, UUID skillId, UUID guarantorId) {
         return !userSkillGuaranteeRepository.existsByUserIdAndSkillIdAndGuarantorId(userId, skillId, guarantorId);
     }
 
@@ -140,8 +141,8 @@ public class RecommendationService {
     }
 
     private void validateLastUpdate(RecommendationDto recommendationDto) {
-        long authorId = recommendationDto.getAuthorId();
-        long userId = recommendationDto.getReceiverId();
+        UUID authorId = recommendationDto.getAuthorId();
+        UUID userId = recommendationDto.getReceiverId();
 
         Optional<Recommendation> lastRecommendation =
                 recommendationRepository.findFirstByAuthorIdAndReceiverIdOrderByCreatedAtDesc(authorId, userId);
@@ -167,9 +168,9 @@ public class RecommendationService {
     }
 
     private void validateSkillsAreInRepository(List<SkillOfferDto> skills) {
-        List<Long> skillIds = getUniqueSkillIds(skills);
+        List<UUID> skillIds = getUniqueSkillIds(skills);
 
-        for (Long skillId : skillIds) {
+        for (UUID skillId : skillIds) {
 
             if (!skillRepository.existsById(skillId)) {
                 throw new DataValidationException("Invalid skills");
@@ -177,7 +178,7 @@ public class RecommendationService {
         }
     }
 
-    private List<Long> getUniqueSkillIds(List<SkillOfferDto> skills) {
+    private List<UUID> getUniqueSkillIds(List<SkillOfferDto> skills) {
         return skills.stream()
                 .map(SkillOfferDto::getSkillId)
                 .distinct()

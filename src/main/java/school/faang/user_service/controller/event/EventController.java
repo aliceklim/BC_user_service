@@ -14,6 +14,7 @@ import school.faang.user_service.exception.DataValidationException;
 import school.faang.user_service.service.event.EventService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class EventController {
         return eventService.create(event);
     }
 
-    public EventDto getEvent(long id) {
+    public EventDto getEvent(UUID id) {
         validateId(id);
         return eventService.getEvent(id);
     }
@@ -47,17 +48,17 @@ public class EventController {
         eventService.updateEvent(event);
     }
 
-    public void getOwnedEvents(long userId) {
+    public void getOwnedEvents(UUID userId) {
         validateId(userId);
         eventService.getOwnedEvents(userId);
     }
 
-    public List<Event> getParticipatedEvents(long userId) {
+    public List<Event> getParticipatedEvents(UUID userId) {
         validateId(userId);
         return eventService.getParticipatedEvents(userId);
     }
 
-    public void deleteEvent(long id) {
+    public void deleteEvent(UUID id) {
         validateId(id);
         eventService.deleteEvent(id);
     }
@@ -67,7 +68,7 @@ public class EventController {
                 && event.getStartDate() == null && event.getUserId() == null;
     }
 
-    private void validateId(Long id) {
+    private void validateId(UUID id) {
         if (id == null){
             throw new DataValidationException("Id is null");
         }

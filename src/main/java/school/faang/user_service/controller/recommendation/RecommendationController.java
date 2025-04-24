@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import school.faang.user_service.dto.recommendation.RecommendationDto;
 import school.faang.user_service.service.recommendation.RecommendationService;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/recommendations")
@@ -31,19 +33,19 @@ public class RecommendationController {
     }
 
     @DeleteMapping("/{recommendationId}/delete")
-    public void deleteRecommendation(@PathVariable long recommendationId) {
+    public void deleteRecommendation(@PathVariable UUID recommendationId) {
         recommendationService.delete(recommendationId);
     }
 
     @GetMapping("/user/{userId}/received")
-    public Page<RecommendationDto> getAllUserRecommendations(@PathVariable long userId,
+    public Page<RecommendationDto> getAllUserRecommendations(@PathVariable UUID userId,
                                                              @RequestParam int pageNumber,
                                                              @RequestParam int pageSize) {
         return recommendationService.getAllUserRecommendations(userId, pageNumber, pageSize);
     }
 
     @GetMapping("/user/{userId}/given")
-    public Page<RecommendationDto> getAllGivenRecommendations(@PathVariable long userId,
+    public Page<RecommendationDto> getAllGivenRecommendations(@PathVariable UUID userId,
                                                               @RequestParam int pageNumber,
                                                               @RequestParam int pageSize) {
         return recommendationService.getAllGivenRecommendations(userId, pageNumber, pageSize);

@@ -1,11 +1,12 @@
 package school.faang.user_service.exception;
 
 import java.text.MessageFormat;
+import java.util.UUID;
 
 public class GoalNotFoundException extends RuntimeException{
-    private Long goalId;
+    private UUID goalId;
 
-    public GoalNotFoundException(Long goalId){
+    public GoalNotFoundException(UUID goalId){
         this.goalId = goalId;
     }
 

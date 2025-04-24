@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import java.util.UUID;
 import school.faang.user_service.entity.RequestStatus;
 import school.faang.user_service.entity.User;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,8 +20,8 @@ import java.util.List;
 public class RecommendationRequest {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "requester_id", nullable = false)

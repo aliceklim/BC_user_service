@@ -9,6 +9,7 @@ import school.faang.user_service.exception.DataValidationException;
 import school.faang.user_service.service.recommendation.RecommendationRequestService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,11 +25,11 @@ public class RecommendationRequestController {
         return recommendationRequestService.getRecommendationRequests(filterDto);
     }
 
-    public RecommendationRequestDto getRecommendationRequest(long id) {
+    public RecommendationRequestDto getRecommendationRequest(UUID id) {
         return recommendationRequestService.getRequest(id);
     }
 
-    public RecommendationRequestDto rejectRequest(long id, RejectionDto rejection) {
+    public RecommendationRequestDto rejectRequest(UUID id, RejectionDto rejection) {
         return recommendationRequestService.rejectRequest(id, rejection);
     }
 

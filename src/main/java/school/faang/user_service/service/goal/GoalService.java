@@ -19,6 +19,7 @@ import school.faang.user_service.util.Message;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
@@ -32,7 +33,7 @@ public class GoalService {
     private final GoalCompletedEventPublisher goalCompletedEventPublisher;
 
     @Transactional
-    public GoalDto createGoal(GoalDto goal, Long userId) {
+    public GoalDto createGoal(GoalDto goal, UUID userId) {
         int currentUserGoalNum = goalRepository.countActiveGoalsPerUser(userId);
         boolean allSkillsExist = goal.getSkills().stream()
                 .allMatch(skill -> skillRepository.findByTitle(skill.toLowerCase()).isPresent());
@@ -50,7 +51,7 @@ public class GoalService {
     }
 
     @Transactional
-    public GoalDto updateGoal(GoalDto goalDto, Long userId) {
+    public GoalDto updateGoal(GoalDto goalDto, UUID userId) {
          Goal goal = goalRepository.findById(goalDto.getId())
                .orElseThrow(() -> new GoalNotFoundException(userId));
 
@@ -62,7 +63,7 @@ public class GoalService {
     }
 
     @Transactional
-    public void deleteGoal(Long goalId){
+    public void deleteGoal(UUID goalId){
         Goal goal = goalRepository.findById(goalId)
                 .orElseThrow(() ->
                         new GoalNotFoundException(goalId));
@@ -70,11 +71,11 @@ public class GoalService {
         goalRepository.delete(goal);
     }
 
-    public List<GoalDto> findSubtasksByGoalId(Long parentGoalId, GoalFilterDto goalFilterDto){
+    public List<GoalDto> findSubtasksByGoalId(UUID parentGoalId, GoalFilterDto goalFilterDto){
         return applyFilter(goalRepository.findByParent(parentGoalId), goalFilterDto);
     }
 
-    public List<GoalDto> getGoalsByUser(Long userId, GoalFilterDto goalFilterDto){
+    public List<GoalDto> getGoalsByUser(UUID userId, GoalFilterDto goalFilterDto){
         List<Goal> goals = goalRepository.findGoalsByUserId(userId)
                         .peek(goal -> goal.setSkillsToAchieve(skillRepository.findSkillsByGoalId(goal.getId())))
                 .toList();
@@ -91,7 +92,7 @@ public class GoalService {
     }
 
     @Transactional
-    public GoalDto completeGoal(Long goalId){
+    public GoalDto completeGoal(UUID goalId){
         Goal goal = goalRepository.findById(goalId)
                 .orElseThrow(() ->
                         new GoalNotFoundException(goalId));

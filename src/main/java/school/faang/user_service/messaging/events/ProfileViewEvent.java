@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import school.faang.user_service.entity.contact.PreferredContact;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 public class ProfileViewEvent {
-    private Long idVisitor;
-    private Long idVisited;
+    private UUID idVisitor;
+    private UUID idVisited;
     private PreferredContact preferredContact;
 
     @Override

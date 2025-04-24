@@ -7,17 +7,18 @@ import school.faang.user_service.entity.User;
 import school.faang.user_service.entity.goal.Goal;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Repository
-public interface GoalRepository extends CrudRepository<Goal, Long> {
+public interface GoalRepository extends CrudRepository<Goal, UUID> {
 
     @Query(nativeQuery = true, value = """
             SELECT * FROM goal g
             JOIN user_goal ug ON g.id = ug.goal_id
             WHERE ug.user_id = ?1
             """)
-    Stream<Goal> findGoalsByUserId(long userId);
+    Stream<Goal> findGoalsByUserId(UUID userId);
 
     @Query(nativeQuery = true, value = """
             INSERT INTO goal (title, description, parent_goal_id, status, created_at, updated_at)
@@ -30,7 +31,7 @@ public interface GoalRepository extends CrudRepository<Goal, Long> {
             JOIN goal g ON g.id = ug.goal_id
             WHERE ug.user_id = :userId AND g.status = 0
             """)
-    int countActiveGoalsPerUser(long userId);
+    int countActiveGoalsPerUser(UUID userId);
 
     @Query(nativeQuery = true, value = """
             WITH RECURSIVE subtasks AS (
@@ -41,12 +42,12 @@ public interface GoalRepository extends CrudRepository<Goal, Long> {
             )
             SELECT * FROM subtasks WHERE id != :goalId
             """)
-    Stream<Goal> findByParent(long goalId);
+    Stream<Goal> findByParent(UUID goalId);
 
     @Query(nativeQuery = true, value = """
             SELECT u.* FROM users u
             JOIN user_goal ug ON u.id = ug.user_id
             WHERE ug.goal_id = :goalId
             """)
-    List<User> findUsersByGoalId(long goalId);
+    List<User> findUsersByGoalId(UUID goalId);
 }
