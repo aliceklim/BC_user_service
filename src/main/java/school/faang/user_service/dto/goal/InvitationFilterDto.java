@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import school.faang.user_service.entity.RequestStatus;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,9 +16,9 @@ public class InvitationFilterDto {
 
     private String invitedNamePattern;
 
-    private Long inviterId;
+    private UUID inviterId;
 
-    private Long invitedId;
+    private UUID invitedId;
 
     private RequestStatus status;
 }

@@ -17,10 +17,7 @@ import school.faang.user_service.repository.goal.GoalInvitationRepository;
 import school.faang.user_service.repository.goal.GoalRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Service
@@ -62,7 +59,7 @@ public class GoalInvitationService {
     }
 
 
-    public GoalInvitationDto acceptGoalInvitation(long id) {
+    public GoalInvitationDto acceptGoalInvitation(UUID id) {
         GoalInvitation goalInvitation = getGoalInvitation(id);
         User user = goalInvitation.getInvited();
 
@@ -73,7 +70,7 @@ public class GoalInvitationService {
         return goalInvitationMapper.toDto(goalInvitation);
     }
 
-    public GoalInvitationDto rejectGoalInvitation(long id) {
+    public GoalInvitationDto rejectGoalInvitation(UUID id) {
 
         GoalInvitation goalInvitation = getGoalInvitation(id);
         goalInvitation.setStatus(RequestStatus.REJECTED);
@@ -97,7 +94,7 @@ public class GoalInvitationService {
         return invitations.stream().map(goalInvitationMapper::toDto).toList();
     }
 
-    private GoalInvitation getGoalInvitation(long id) {
+    private GoalInvitation getGoalInvitation(UUID id) {
         GoalInvitation goalInvitation = goalInvitationRepository.findById(id)
                 .orElseThrow(() -> new GoalInvitationException("GoalInvitation not found"));
         User user = goalInvitation.getInvited();

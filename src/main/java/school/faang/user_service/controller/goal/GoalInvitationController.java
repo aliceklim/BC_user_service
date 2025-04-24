@@ -12,6 +12,7 @@ import school.faang.user_service.dto.goal.InvitationFilterDto;
 import school.faang.user_service.service.GoalInvitationService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,12 +26,12 @@ public class GoalInvitationController {
     }
 
     @GetMapping("/accept/{id}")
-    public GoalInvitationDto acceptGoalInvitation(@PathVariable long id) {
+    public GoalInvitationDto acceptGoalInvitation(@PathVariable UUID id) {
         return goalInvitationService.acceptGoalInvitation(id);
     }
 
     @GetMapping("/reject/{id}")
-    public GoalInvitationDto rejectGoalInvitation(@PathVariable long id) {
+    public GoalInvitationDto rejectGoalInvitation(@PathVariable UUID id) {
         return goalInvitationService.rejectGoalInvitation(id);
     }
 

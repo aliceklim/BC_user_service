@@ -15,6 +15,7 @@ import school.faang.user_service.service.event.EventService;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class GoogleCalendarController {
 
     @Operation(summary = "Add event to google calendar")
     @PostMapping("/{id}")
-    public GoogleEventResponseDto createCalendarEvent(@PathVariable("id") Long eventId) throws GeneralSecurityException, IOException {
+    public GoogleEventResponseDto createCalendarEvent(@PathVariable("id") UUID eventId) throws GeneralSecurityException, IOException {
         EventDto event = eventService.getEvent(eventId);
         return googleCalendarService.createEvent(googleCalendarMapper.toGoogleEventDto(event));
     }

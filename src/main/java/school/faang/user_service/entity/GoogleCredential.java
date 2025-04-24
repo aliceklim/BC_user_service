@@ -2,6 +2,7 @@ package school.faang.user_service.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -9,8 +10,8 @@ import lombok.Data;
 public class GoogleCredential {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "client_id", length = 128, nullable = false)
     private String clientId;

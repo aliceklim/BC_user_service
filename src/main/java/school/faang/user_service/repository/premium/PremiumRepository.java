@@ -4,8 +4,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import school.faang.user_service.entity.premium.Premium;
 
-@Repository
-public interface PremiumRepository extends CrudRepository<Premium, Long> {
+import java.util.UUID;
 
-    boolean existsByUserId(long userId);
+@Repository
+public interface PremiumRepository extends CrudRepository<Premium, UUID> {
+
+    boolean existsByUserId(UUID userId);
 }

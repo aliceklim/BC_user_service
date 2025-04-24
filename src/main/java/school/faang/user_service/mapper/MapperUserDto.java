@@ -1,5 +1,6 @@
 package school.faang.user_service.mapper;
 
+import java.util.UUID;
 import org.mapstruct.*;
 import school.faang.user_service.dto.user.CreatedUserDto;
 import school.faang.user_service.dto.user.CreateUserRequestDto;
@@ -56,14 +57,14 @@ public interface MapperUserDto {
     User fromCreateRequest(CreateUserRequestDto dto);
 
     @Named("mapToIdList")
-    default List<Long> mapToIdList(List<User> users) {
+    default List<UUID> mapToIdList(List<User> users) {
         return users.stream()
                 .map(User::getId)
                 .collect(Collectors.toList());
     }
 
     @Named("mapToUserList")
-    default List<User> mapToUserList(List<Long> userIds) {
+    default List<User> mapToUserList(List<UUID> userIds) {
         return userIds.stream()
                 .map(userId -> User.builder().id(userId).build())
                 .collect(Collectors.toList());

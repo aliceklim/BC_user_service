@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import java.util.UUID;
 
 import java.time.LocalDateTime;
 
@@ -17,8 +18,8 @@ import java.time.LocalDateTime;
 public class MentorshipRequest {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "description", nullable = false, length = 4096)
     private String description;

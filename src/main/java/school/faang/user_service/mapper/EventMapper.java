@@ -1,5 +1,6 @@
 package school.faang.user_service.mapper;
 
+import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -22,7 +23,7 @@ public interface EventMapper {
     @Mapping(target = "eventStatus", source = "status")
     EventDto toEventDto(Event event);
 
-    default User mapToUser(Long userId) {
+    default User mapToUser(UUID userId) {
         if (userId == null) {
             return null;
         }

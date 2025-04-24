@@ -1,6 +1,7 @@
 package school.faang.user_service.dto.user;
 
 import lombok.Builder;
+import java.util.UUID;
 import school.faang.user_service.dto.CountryDto;
 import school.faang.user_service.dto.goal.GoalDto;
 import school.faang.user_service.dto.skill.SkillDto;
@@ -8,7 +9,7 @@ import school.faang.user_service.dto.skill.SkillDto;
 import java.util.List;
 
 @Builder
-public record UserDto(Long id,
+public record UserDto(UUID id,
                       String name,
                       String surname,
                       String email,
@@ -17,10 +18,10 @@ public record UserDto(Long id,
                       boolean active,
                       String city,
                       Integer experience,
-                      List<Long> followerIds,
-                      List<Long> followeeIds,
-                      List<Long> mentors,
-                      List<Long> mentees,
+                      List<UUID> followerIds,
+                      List<UUID> followeeIds,
+                      List<UUID> mentors,
+                      List<UUID> mentees,
                       CountryDto country,
                       List<GoalDto> goals,
                       List<SkillDto> skills,

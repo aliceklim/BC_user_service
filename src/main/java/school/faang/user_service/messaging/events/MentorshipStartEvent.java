@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @AllArgsConstructor
 public class MentorshipStartEvent {
-    private Long mentorId;
-    private Long menteeId;
+    private UUID mentorId;
+    private UUID menteeId;
 }

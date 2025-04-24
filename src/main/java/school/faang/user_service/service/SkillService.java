@@ -2,6 +2,7 @@ package school.faang.user_service.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import school.faang.user_service.dto.skill.SkillCandidateDto;
 import school.faang.user_service.dto.skill.SkillDto;
@@ -44,7 +45,7 @@ public class SkillService {
         return skillMapper.skillToDto(newSkill);
     }
 
-    public List<SkillDto> getUserSkills(Long userId, int pageNumber, int pageSize) {
+    public List<SkillDto> getUserSkills(UUID userId, int pageNumber, int pageSize) {
         int numToSkip = (pageNumber - 1) * pageSize;
 
         return skillRepository.findAllByUserId(userId)
@@ -55,7 +56,7 @@ public class SkillService {
                 .toList();
     }
 
-    public List<SkillCandidateDto> getOfferedSkills(Long userId) {
+    public List<SkillCandidateDto> getOfferedSkills(UUID userId) {
         Map<Skill, Long> skillMap = skillRepository.findAllByUserId(userId)
                 .stream()
                 .collect(Collectors.groupingBy(skill -> skill, Collectors.counting()));
@@ -70,7 +71,7 @@ public class SkillService {
     }
 
     @Transactional
-    public SkillDto acquireSkillFromOffers(Long skillId, Long userId) {
+    public SkillDto acquireSkillFromOffers(UUID skillId, UUID userId) {
         Optional<Skill> optionalSkill = skillRepository.findUserSkill(skillId, userId);
         if (optionalSkill.isPresent()) {
             return skillMapper.skillToDto(optionalSkill.get());
@@ -93,7 +94,7 @@ public class SkillService {
         return skillMapper.skillToDto(updatedSkill);
     }
 
-    private Skill addSkillGuarantees(Skill skill, List<SkillOffer> skillOffers, Long userId) {
+    private Skill addSkillGuarantees(Skill skill, List<SkillOffer> skillOffers, UUID userId) {
         List<UserSkillGuarantee> newGuarantees = skillOffers.stream().map(skillOffer -> UserSkillGuarantee.builder()
                         .user(userRepository.findById(userId)
                                 .orElseThrow(() -> new RuntimeException(

@@ -9,26 +9,27 @@ import org.springframework.stereotype.Repository;
 import school.faang.user_service.entity.recommendation.Recommendation;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface RecommendationRepository extends CrudRepository<Recommendation, Long> {
+public interface RecommendationRepository extends CrudRepository<Recommendation, UUID> {
 
     @Query(nativeQuery = true, value = """
             INSERT INTO recommendation (author_id, receiver_id, content)
             VALUES (?1, ?2, ?3) returning id
             """)
-    Long create(long authorId, long receiverId, String content);
+    Long create(UUID authorId, UUID receiverId, String content);
 
     @Query(nativeQuery = true, value = """
             UPDATE recommendation SET content = :content, updated_at = now()
             WHERE author_id = :authorId AND receiverId = :receiverId
             """)
     @Modifying
-    Recommendation update(long authorId, long receiverId, String content);
+    Recommendation update(UUID authorId, UUID receiverId, String content);
 
-    Page<Recommendation> findAllByReceiverId(long receiverId, Pageable pageable);
+    Page<Recommendation> findAllByReceiverId(UUID receiverId, Pageable pageable);
 
-    Page<Recommendation> findAllByAuthorId(long authorId, Pageable pageable);
+    Page<Recommendation> findAllByAuthorId(UUID authorId, Pageable pageable);
 
-    Optional<Recommendation> findFirstByAuthorIdAndReceiverIdOrderByCreatedAtDesc(long authorId, long receiverId);
+    Optional<Recommendation> findFirstByAuthorIdAndReceiverIdOrderByCreatedAtDesc(UUID authorId, UUID receiverId);
 }

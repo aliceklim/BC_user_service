@@ -11,6 +11,7 @@ import school.faang.user_service.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -21,8 +22,8 @@ import java.util.List;
 public class Recommendation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "content", length = 4096, nullable = false)
     private String content;

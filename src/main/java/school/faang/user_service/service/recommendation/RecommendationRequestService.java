@@ -2,6 +2,7 @@ package school.faang.user_service.service.recommendation;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import school.faang.user_service.dto.filter.RecommendationRequestFilterDto;
 import school.faang.user_service.dto.rejection.RejectionDto;
@@ -37,14 +38,14 @@ public class RecommendationRequestService {
         return recommendationRequestMapper.toDto(recommendationRequestRepository.save(entity));
     }
 
-    public RecommendationRequestDto getRequest(long id) {
+    public RecommendationRequestDto getRequest(UUID id) {
         Optional<RecommendationRequest> optionalRecommendationRequest = recommendationRequestRepository.findById(id);
         RecommendationRequest entity = optionalRecommendationRequest
                 .orElseThrow(() -> new DataValidationException(MessageFormat.format("Recommendation with id = {0} does not exist!", id)));
         return recommendationRequestMapper.toDto(entity);
     }
 
-    public RecommendationRequestDto rejectRequest(long id, RejectionDto rejection) {
+    public RecommendationRequestDto rejectRequest(UUID id, RejectionDto rejection) {
         Optional<RecommendationRequest> optionalRecommendationRequest = recommendationRequestRepository.findById(id);
         RecommendationRequest entity = optionalRecommendationRequest
                 .orElseThrow(() -> new DataValidationException(MessageFormat.format("Recommendation with id = {0} does not exist!", id)));
@@ -63,14 +64,14 @@ public class RecommendationRequestService {
                 .toList();
     }
 
-    private void validate(Long userId) {
+    private void validate(UUID userId) {
         if (!userRepository.existsById(userId)) {
             throw new DataValidationException(MessageFormat.format("User {0} does not exist!", userId));
         }
     }
 
-    private void validate(List<Long> skillIds) {
-        for (Long skillId : skillIds) {
+    private void validate(List<UUID> skillIds) {
+        for (UUID skillId : skillIds) {
             if (!skillRepository.existsById(skillId)) {
                 throw new DataValidationException(MessageFormat.format("Skill {0}} does not exist!", skillId));
             }

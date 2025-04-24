@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import java.util.UUID;
 import school.faang.user_service.entity.User;
 
 import java.time.LocalDateTime;
@@ -25,8 +26,8 @@ public class Rating {
     private final static int RATE_MAX_VALUE = 5;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "comment", length = 4096)
     private String comment;

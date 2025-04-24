@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import java.util.UUID;
 
 import java.time.LocalDateTime;
 
@@ -19,15 +20,15 @@ import java.time.LocalDateTime;
 public class ProjectSubscription {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "follower_id", nullable = false)
     private User follower;
 
     @Column(name = "project_id", nullable = false)
-    private long projectId;
+    private UUID projectId;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

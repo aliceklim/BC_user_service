@@ -15,6 +15,7 @@ import school.faang.user_service.repository.event.EventRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
@@ -26,7 +27,7 @@ public class EventService {
     private final List<EventFilter> eventFilters;
 
     public EventDto create(EventDto event) {
-        User user = userRepository.findById(event.getId()).orElseThrow(
+        User user = userRepository.findById(event.getUserId()).orElseThrow(
                 () -> new DataValidationException("Event " + event.getId() + " with this id was not found in the method create"));
         if (!(isUserContainsSkill(event, user))) {
             throw new DataValidationException("The event " + event.getId() +
@@ -40,7 +41,7 @@ public class EventService {
         return eventMapper.toEventDto(savedEvent);
     }
 
-    public EventDto getEvent(long eventId) {
+    public EventDto getEvent(UUID eventId) {
         return eventMapper.toEventDto(eventRepository.findById(eventId)
                 .orElseThrow(() -> new DataValidationException("Event " + eventId + "with this id was not found in the method getEvent")));
     }
@@ -66,16 +67,16 @@ public class EventService {
         return eventMapper.toEventDto(eventRepository.save(event1));
     }
 
-    public List<Event> getOwnedEvents(long userId) {
+    public List<Event> getOwnedEvents(UUID userId) {
         return eventRepository.findAllByUserId(userId);
     }
 
-    public List<Event> getParticipatedEvents(long userId) {
+    public List<Event> getParticipatedEvents(UUID userId) {
         return eventRepository.findParticipatedEventsByUserId(userId);
     }
 
-    public void deleteEvent(long eventId) {
-        if (eventId <= 0) {
+    public void deleteEvent(UUID eventId) {
+        if (eventId == null) {
             throw new DataValidationException("Event " + eventId + " does not exist");
         }
         eventRepository.deleteById(eventId);
