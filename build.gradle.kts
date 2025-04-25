@@ -4,6 +4,7 @@ plugins {
 	id("org.springframework.boot") version "3.0.6"
 	id("io.spring.dependency-management") version "1.1.0"
 	id("org.jsonschema2pojo") version "1.2.1"
+	id("org.sonarqube") version "6.0.1.5171"
 }
 
 group = "faang.school"
