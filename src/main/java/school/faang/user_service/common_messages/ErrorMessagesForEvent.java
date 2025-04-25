@@ -1,4 +1,4 @@
-package school.faang.user_service.commonMessages;
+package school.faang.user_service.common_messages;
 
 
 public final class ErrorMessagesForEvent {

@@ -15,6 +15,6 @@ public class UserContactFilter implements UserFilter {
     @Override
     public Stream<User> apply(Stream<User> users, UserFilterDto filterDto) {
         return users.filter(user -> user.getContacts().stream().anyMatch(contact ->
-                contact.getContact().contains(filterDto.getContactPattern())));
+                contact.getLink().contains(filterDto.getContactPattern())));
     }
 }

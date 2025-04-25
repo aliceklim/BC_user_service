@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import school.faang.user_service.exception.EventSerializationException;
 import school.faang.user_service.messaging.events.GoalCompletedEvent;
 
 @Component
@@ -22,7 +23,7 @@ public class GoalCompletedEventPublisher implements MessagePublisher<GoalComplet
         try {
             json = objectMapper.writeValueAsString(goalCompletedEvent);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new EventSerializationException(GoalCompletedEventPublisher.class.getName());
         }
         redisTemplate.convertAndSend(topic, json);
     }

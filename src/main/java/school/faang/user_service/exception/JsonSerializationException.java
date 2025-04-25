@@ -3,7 +3,7 @@ package school.faang.user_service.exception;
 import java.text.MessageFormat;
 
 public class JsonSerializationException extends RuntimeException{
-    private String objectType;
+    private final String objectType;
 
     public JsonSerializationException(Object object){
         this.objectType = object.getClass().getSimpleName();

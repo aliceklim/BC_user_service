@@ -1,10 +1,8 @@
 package school.faang.user_service.profile_pic_generator;
 
 import org.springframework.web.multipart.MultipartFile;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
 
 public class ByteArrayMultipartFile implements MultipartFile {
 
@@ -57,6 +55,8 @@ public class ByteArrayMultipartFile implements MultipartFile {
 
     @Override
     public void transferTo(File dest) throws IOException, IllegalStateException {
-
+        try (FileOutputStream outputStream = new java.io.FileOutputStream(dest)) {
+            outputStream.write(bytes);
+        }
     }
 }

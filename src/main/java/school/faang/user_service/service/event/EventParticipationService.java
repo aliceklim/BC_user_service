@@ -3,7 +3,7 @@ package school.faang.user_service.service.event;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import school.faang.user_service.commonMessages.ErrorMessagesForEvent;
+import school.faang.user_service.common_messages.ErrorMessagesForEvent;
 import school.faang.user_service.dto.user.UserDto;
 import school.faang.user_service.entity.User;
 import school.faang.user_service.exception.RegistrationUserForEventException;
@@ -14,8 +14,8 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.UUID;
 
-import static school.faang.user_service.commonMessages.ErrorMessagesForEvent.USER_IS_ALREADY_REGISTERED_FORMAT;
-import static school.faang.user_service.commonMessages.ErrorMessagesForEvent.USER_IS_NOT_REGISTERED_FORMAT;
+import static school.faang.user_service.common_messages.ErrorMessagesForEvent.USER_IS_ALREADY_REGISTERED_FORMAT;
+import static school.faang.user_service.common_messages.ErrorMessagesForEvent.USER_IS_NOT_REGISTERED_FORMAT;
 
 @Service
 @RequiredArgsConstructor

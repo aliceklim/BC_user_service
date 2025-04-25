@@ -153,7 +153,7 @@ public class RecommendationService {
 
             if (lastUpdate.plusMonths(RECOMMENDATION_INTERVAL_MONTHS).isAfter(currentDate)) {
                 String errorMessage = String.format(
-                        "You've already recommended the %d user in the last %d months",
+                        "You've already recommended the %s user in the last %d months",
                         userId, RECOMMENDATION_INTERVAL_MONTHS);
 
                 throw new DataValidationException(errorMessage);

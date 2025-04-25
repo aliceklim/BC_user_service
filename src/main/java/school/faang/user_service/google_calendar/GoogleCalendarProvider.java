@@ -34,14 +34,14 @@ public class GoogleCalendarProvider {
     private String accessType;
     private String clientEmail;
 
-    private final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private GoogleCredentialRepository googleCredentialRepository;
     private GoogleCredentialMapper googleCredentialMapper;
 
     @Getter
     private Calendar calendar;
 
-    private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
+    private Credential getCredentials(final NetHttpTransport httpTransport)
             throws IOException {
 
         GoogleCredential googleCredential = googleCredentialRepository.findByClientEmail(clientEmail);
@@ -51,7 +51,7 @@ public class GoogleCalendarProvider {
         GoogleClientSecrets clientSecrets = new GoogleClientSecrets().setWeb(clientSecretsDetails);
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes)
+                httpTransport, JSON_FACTORY, clientSecrets, scopes)
                 .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(tokensDirectoryPath)))
                 .setAccessType(accessType)
                 .build();
@@ -80,8 +80,8 @@ public class GoogleCalendarProvider {
         this.googleCredentialRepository = googleCredentialRepository;
         this.googleCredentialMapper = googleCredentialMapper;
 
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        calendar = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+        final NetHttpTransport netHttpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        calendar = new Calendar.Builder(netHttpTransport, JSON_FACTORY, getCredentials(netHttpTransport))
                 .setApplicationName(applicationName)
                 .build();
     }
