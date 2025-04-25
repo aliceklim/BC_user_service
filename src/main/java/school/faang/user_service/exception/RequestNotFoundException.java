@@ -7,8 +7,8 @@ import java.util.UUID;
 
 @AllArgsConstructor
 public class RequestNotFoundException extends RuntimeException {
-    private UUID requesterId;
-    private UUID receiverId;
+    private final UUID requesterId;
+    private final UUID receiverId;
 
     @Override
     public String getMessage() {

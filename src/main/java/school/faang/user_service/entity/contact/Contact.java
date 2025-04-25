@@ -25,7 +25,7 @@ public class Contact {
     private User user;
 
     @Column(name = "contact", length = 128, nullable = false, unique = true)
-    private String contact;
+    private String link;
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.ORDINAL)

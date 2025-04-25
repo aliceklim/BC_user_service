@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 import java.util.UUID;
 
 public class GoalNotFoundException extends RuntimeException{
-    private UUID goalId;
+    private final UUID goalId;
 
     public GoalNotFoundException(UUID goalId){
         this.goalId = goalId;

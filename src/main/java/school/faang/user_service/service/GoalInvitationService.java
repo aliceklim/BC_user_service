@@ -10,7 +10,7 @@ import school.faang.user_service.entity.User;
 import school.faang.user_service.entity.goal.Goal;
 import school.faang.user_service.entity.goal.GoalInvitation;
 import school.faang.user_service.exception.GoalInvitationException;
-import school.faang.user_service.filter.filtersForGoalInvitation.GoalInvitationFilter;
+import school.faang.user_service.filter.filters_for_goal_invitation.GoalInvitationFilter;
 import school.faang.user_service.mapper.GoalInvitationMapper;
 import school.faang.user_service.repository.UserRepository;
 import school.faang.user_service.repository.goal.GoalInvitationRepository;
@@ -28,7 +28,7 @@ public class GoalInvitationService {
     private final GoalRepository goalRepository;
     private final GoalInvitationMapper goalInvitationMapper;
     private final List<GoalInvitationFilter> goalInvitationFilters;
-    private static final int maxGoals = 3;
+    private static final int MAX_GOALS = 3;
 
     @Transactional
     public GoalInvitationDto createInvitation(GoalInvitationDto invitationDto) {
@@ -100,7 +100,7 @@ public class GoalInvitationService {
         User user = goalInvitation.getInvited();
         Goal goal = Optional.of(goalInvitation.getGoal())
                 .orElseThrow(() -> new GoalInvitationException("goal not found"));
-        if (!user.getGoals().contains(goalInvitation.getGoal()) && user.getGoals().size() > maxGoals) {
+        if (!user.getGoals().contains(goalInvitation.getGoal()) && user.getGoals().size() > MAX_GOALS) {
             throw new GoalInvitationException("The user is already in the goal or he is already participating in three goals");
         }
         if (goal == null) {

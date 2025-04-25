@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import school.faang.user_service.commonMessages.ErrorMessages;
+import school.faang.user_service.common_messages.ErrorMessages;
 import school.faang.user_service.dto.user.UserDto;
 import school.faang.user_service.exception.DataValidationException;
 import school.faang.user_service.filter.user.UserFilterDto;
@@ -190,8 +190,8 @@ class SubscriptionServiceTest {
     private List<Contact> createContacts() {
         Contact contact = new Contact();
         Contact contact2 = new Contact();
-        contact.setContact("UserContact");
-        contact2.setContact("UserContact");
+        contact.setLink("UserContact");
+        contact2.setLink("UserContact");
         return List.of(contact, contact2);
     }
 

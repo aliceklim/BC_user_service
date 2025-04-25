@@ -2,6 +2,8 @@ package school.faang.user_service.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +20,7 @@ import school.faang.user_service.messaging.ProfileViewEventPublisher;
 
 @Configuration
 public class RedisConfig {
+    private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -32,7 +35,7 @@ public class RedisConfig {
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
-        System.out.println(port);
+        logger.info("Redis port: {}", port);
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
         return new JedisConnectionFactory(config);
     }
