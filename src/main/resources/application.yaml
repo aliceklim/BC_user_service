@@ -49,7 +49,7 @@ payment-service:
   port: 9080
 
 minio:
-  endpoint: http://localhost:9000
+  endpoint: http://localhost:1000
   user: user
   password: password
   bucketName: corpbucket
