@@ -2,6 +2,7 @@ package school.faang.user_service.service.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import school.faang.user_service.dto.event.EventDto;
 import school.faang.user_service.dto.event.EventFilterDto;
 import school.faang.user_service.dto.skill.SkillDto;
@@ -15,7 +16,9 @@ import school.faang.user_service.repository.event.EventRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -26,69 +29,71 @@ public class EventService {
     private final EventMapper eventMapper;
     private final List<EventFilter> eventFilters;
 
-    public EventDto create(EventDto event) {
-        User user = userRepository.findById(event.getUserId()).orElseThrow(
-                () -> new DataValidationException("Event " + event.getId() + " with this id was not found in the method create"));
-        if (!(isUserContainsSkill(event, user))) {
-            throw new DataValidationException("The event " + event.getId() +
-                    " cannot be held with such skills at the user " + user.getId() + " in the method create");
+    @Transactional
+    public EventDto create(EventDto eventDto) {
+        UUID userId = eventDto.getUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new DataValidationException("User {} not found", userId));
+        if (!(userHasRequiredSkills(eventDto, user))) {
+                throw new DataValidationException("Creator's skills {} doesn't correspond to the event's {} necessary skills",
+                        eventDto.getId(), user.getId());
         }
-        Event newEvent = eventMapper.toEvent(event);
-
+        Event newEvent = eventMapper.toEvent(eventDto);
         Event savedEvent = eventRepository.save(newEvent);
-
 
         return eventMapper.toEventDto(savedEvent);
     }
 
     public EventDto getEvent(UUID eventId) {
-        return eventMapper.toEventDto(eventRepository.findById(eventId)
-                .orElseThrow(() -> new DataValidationException("Event " + eventId + "with this id was not found in the method getEvent")));
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new DataValidationException("Event {} not found}", eventId));
+        return eventMapper.toEventDto(event);
     }
 
     public List<EventDto> getEventsByFilter(EventFilterDto filters) {
         Stream<Event> events = eventRepository.findAll().stream();
 
-        List<EventFilter> eventFilterList = eventFilters.stream()
-                .filter(filter -> filter.isApplicable(filters))
-                .toList();
-
-        for (EventFilter filter : eventFilterList) {
-            events = filter.apply(events, filters);
+        for (EventFilter filter : eventFilters) {
+            if (filter.isApplicable(filters)) {
+                events = filter.apply(events, filters);
+            }
         }
+
         return events.map(eventMapper::toEventDto).toList();
     }
 
-    public EventDto updateEvent(EventDto event) {
-        Event event1 = eventRepository.findById(event.getId())
+    public EventDto updateEvent(EventDto newEvent) {
+        Event oldEvent = eventRepository.findById(newEvent.getId())
                 .orElseThrow(() -> new DataValidationException(
-                        "The event " + event.getId() + " did not pass validation when updating the event in the method updateEvent"));
-        eventMapper.update(event1, event);
-        return eventMapper.toEventDto(eventRepository.save(event1));
+                        "Event {} does not exist", newEvent.getId()));
+        eventMapper.update(oldEvent, newEvent);
+        return eventMapper.toEventDto(eventRepository.save(oldEvent));
     }
 
-    public List<Event> getOwnedEvents(UUID userId) {
-        return eventRepository.findAllByUserId(userId);
+    public List<EventDto> getOwnedEvents(UUID userId) {
+        return eventMapper.toEventDtoList(eventRepository.findAllByUserId(userId));
     }
 
-    public List<Event> getParticipatedEvents(UUID userId) {
-        return eventRepository.findParticipatedEventsByUserId(userId);
+    public List<EventDto> getParticipatedEvents(UUID userId) {
+        return eventMapper.toEventDtoList(eventRepository.findParticipatedEventsByUserId(userId));
     }
 
     public void deleteEvent(UUID eventId) {
-        if (eventId == null) {
-            throw new DataValidationException("Event " + eventId + " does not exist");
+        if (!eventRepository.existsById(eventId)) {
+            throw new DataValidationException("Event {} does not exist", eventId);
         }
         eventRepository.deleteById(eventId);
     }
 
-    private boolean isUserContainsSkill(EventDto event, User user) {
-        return new HashSet<>(user.getSkills()
-                .stream()
+    private boolean userHasRequiredSkills(EventDto eventDto, User user) {
+        Set<String> userSkillTitles = user.getSkills().stream()
                 .map(Skill::getTitle)
-                .toList())
-                .containsAll(event.getRelatedSkills()
-                        .stream()
-                        .map(SkillDto::getTitle).toList());
+                .collect(Collectors.toSet());
+
+        Set<String> requiredSkillTitles = eventDto.getRelatedSkills().stream()
+                .map(SkillDto::getTitle)
+                .collect(Collectors.toSet());
+
+        return userSkillTitles.containsAll(requiredSkillTitles);
     }
 }

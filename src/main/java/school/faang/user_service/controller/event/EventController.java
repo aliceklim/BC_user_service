@@ -1,12 +1,14 @@
 package school.faang.user_service.controller.event;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import school.faang.user_service.dto.event.EventDto;
 import school.faang.user_service.dto.event.EventFilterDto;
 import school.faang.user_service.entity.event.Event;
@@ -25,52 +27,45 @@ public class EventController {
 
     @Operation(summary = "Add event")
     @PostMapping
-    public EventDto create(@RequestBody EventDto event) {
-        if (checkValidation(event)) {
-            throw new DataValidationException("Object is not valid");
-        }
-        return eventService.create(event);
+    public ResponseEntity<EventDto> create(@RequestBody @Valid EventDto event) {
+        EventDto created = eventService.create(event);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    public EventDto getEvent(UUID id) {
-        validateId(id);
-        return eventService.getEvent(id);
+    @Operation(summary = "Get event by id")
+    @GetMapping("/{id}")
+    public ResponseEntity<EventDto> getEvent(@PathVariable @NonNull UUID id) {
+        return ResponseEntity.ok(eventService.getEvent(id));
+    }
+    @Operation(summary = "Get all events")
+    @GetMapping
+    public ResponseEntity<List<EventDto>> getEventsByFilter(@ModelAttribute @Valid EventFilterDto filter) {
+        return ResponseEntity.ok(eventService.getEventsByFilter(filter));
     }
 
-    public void getEventsByFilter(EventFilterDto filter) {
-        eventService.getEventsByFilter(filter);
-    }
-
-    public void updateEvent(EventDto event) {
-        if (checkValidation(event)) {
-            throw new DataValidationException("The event did not pass validation when updating the event");
-        }
+    @Operation(summary = "Update event")
+    @PutMapping
+    public ResponseEntity<Void> updateEvent(@RequestBody @Valid EventDto event) {
         eventService.updateEvent(event);
+        return ResponseEntity.noContent().build();
     }
 
-    public void getOwnedEvents(UUID userId) {
-        validateId(userId);
-        eventService.getOwnedEvents(userId);
+    @Operation(summary = "Get all created events by user id")
+    @GetMapping("/users/{userId}/created")
+    public ResponseEntity<List<EventDto>> getOwnedEvents(@PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(eventService.getOwnedEvents(userId));
     }
 
-    public List<Event> getParticipatedEvents(UUID userId) {
-        validateId(userId);
-        return eventService.getParticipatedEvents(userId);
+    @Operation(summary = "Get all events user is invited to")
+    @GetMapping("/users/{userId}/participated")
+    public ResponseEntity<List<EventDto>> getParticipatedEvents(@PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(eventService.getParticipatedEvents(userId));
     }
 
-    public void deleteEvent(UUID id) {
-        validateId(id);
+    @Operation(summary = "Delete event a user invited to by id")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable @NotNull UUID id) {
         eventService.deleteEvent(id);
-    }
-
-    private boolean checkValidation(EventDto event) {
-        return event.getTitle() == null && event.getTitle().isEmpty()
-                && event.getStartDate() == null && event.getUserId() == null;
-    }
-
-    private void validateId(UUID id) {
-        if (id == null){
-            throw new DataValidationException("Id is null");
-        }
+        return ResponseEntity.noContent().build();
     }
 }
